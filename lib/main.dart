@@ -84,18 +84,29 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              color: Colors.blueGrey,
-              width: 400,
-              height: 450,
+              decoration: BoxDecoration(
+                color: Colors.redAccent,
+                border: Border.all(color: Colors.black, width: 4),
+              ),
+              width: 450,
+              height: 100,
+              alignment: Alignment.center,
               child: Stack(
                 children: [
                   Padding(
                     padding: EdgeInsets.all(15),
-                    child: Text('Welcome to the bank!', style: TextStyle()),
+                    child: Text(
+                      'Welcome to the bank!',
+                      style: TextStyle(
+                        fontWeight: (FontWeight.bold),
+                        fontSize: 35,
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
+            SizedBox(height: 50),
             ElevatedButton(
               onPressed: () => context.push('/login'),
               style: ElevatedButton.styleFrom(
@@ -140,7 +151,73 @@ class CreateAccount extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [],
+          children: [
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 400),
+              child: TextFormField(
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Enter a username',
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 400),
+              child: TextFormField(
+                obscureText: true,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Enter a password',
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 400),
+              child: TextFormField(
+                obscureText: true,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Confirm your password',
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 400),
+              child: ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Are your username and password correct?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'Cancel'),
+                          child: const Text('Cancel')
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context, 'Cancel');
+                            context.pop();
+                          },
+                          child: const Text('Confirm')
+                        ),
+                      ],
+                    ),
+                  );
+                  context.pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.redAccent,
+                  padding: EdgeInsets.all(20),
+                  fixedSize: Size(250, 50),
+                  textStyle: TextStyle(fontWeight: FontWeight.bold),
+                  side: BorderSide(color: Colors.black, width: 2),
+                  shape: StadiumBorder(),
+                ),
+                child: Text('Create Account')
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -153,11 +230,30 @@ class LogIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text('Log In')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [TextField()],
+          children: [
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 400),
+              child: TextFormField(
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Enter your username',
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 400),
+              child: TextFormField(
+                obscureText: true,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Enter your password',
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -171,9 +267,40 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [TextField()],
+          children: [
+            Container(
+              color: Colors.redAccent,
+              width: 300,
+              height: 500,
+              child: Stack(
+                children: [
+
+                ],
+              ),
+            ),
+            Container(
+              color: Colors.pink,
+              width: 300,
+              height: 500,
+              child: Stack(
+                children: [
+
+                ],
+              ),
+            ),
+            Container(
+              color: Colors.redAccent,
+              width: 300,
+              height: 500,
+              child: Stack(
+                children: [
+
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
