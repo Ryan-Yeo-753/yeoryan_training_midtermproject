@@ -281,7 +281,7 @@ class DashboardState extends State<Dashboard> {
 
   void payDebtSurplus(int a, int b) {
     setState(() {
-      _balance = (a + b);
+      _balance = (a - b);
     });
   }
 
@@ -291,19 +291,15 @@ class DashboardState extends State<Dashboard> {
     });
   }
 
-  void deposit() {
-    _balanceChange = int.tryParse(_balanceChangeTEC.text) ?? 0;
-    computeDeposit(_balance, _balanceChange);
-  }
-
-  void withdraw() {
-    _balanceChange = int.tryParse(_balanceChangeTEC.text) ?? 0;
-    computeWithdraw(_balance, _balanceChange);
+  void extraLoan (int a, int b) {
+    setState(() {
+      _debt = (a + b);
+    });
   }
 
   void computeDeposit(int a, int b) {
     setState(() {
-      if (_debt < 0) {
+      if (_debt > 0) {
         if (_balanceChange > _debt) {
           payDebtSurplus(_balanceChange, _debt);
           _debt = 0;
@@ -317,15 +313,31 @@ class DashboardState extends State<Dashboard> {
     });
   }
 
-  void computeWithdraw(int a, int b) {
+  void computeWithdraw(int a, int b, int c) {
     setState(() {
-      if (_balanceChange > _balance) {
-        _debt = (a - b);
-        _balance = 0;
-      } else {
+      if (b > a) {
+        if (c > 0) {
+          extraLoan(c, b);
+        } else {
+          _debt = (-1 * (a - b));
+          _balance = 0;
+        }
+      } else if (b <= a) {
         _balance = (a - b);
       }
     });
+  }
+
+  void error() {}
+
+  void deposit() {
+    _balanceChange = int.tryParse(_balanceChangeTEC.text) ?? 0;
+    _balanceChange < 0 ? error() : computeDeposit(_balance, _balanceChange);
+  }
+
+  void withdraw() {
+    _balanceChange = int.tryParse(_balanceChangeTEC.text) ?? 0;
+    _balanceChange < 0 ? error() : computeWithdraw(_balance, _balanceChange, _debt);
   }
 
   @override
