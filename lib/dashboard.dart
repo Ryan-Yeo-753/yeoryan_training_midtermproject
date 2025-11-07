@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_training_template/user_storage_provider.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -11,65 +12,65 @@ class Dashboard extends StatefulWidget {
 
 class DashboardState extends State<Dashboard> {
 
+  User signedInUser = User('', '', 0, 1);
   int _debt = 0;
-  int _balance = 0;
+  int _balance = int as int;
   int _balanceChange = 0;
   TextEditingController _balanceChangeTEC = TextEditingController();
 
   void error() {}
 
-  void payDebtSurplus(int a, int b) {
+  void add(int a, int b, int c) {
     setState(() {
-      _balance = (a - b);
+      c = (a + b);
     });
   }
 
-  void payDebt(int a, int b) {
+  void subtract(int a, int b, int c) {
     setState(() {
-      _debt = (a + b);
+      c = (a - b);
     });
   }
 
-  void extraLoan (int a, int b) {
-    setState(() {
-      _debt = (a + b);
-    });
+  void loan(int a, int b, int c) {
+    c = (-1 * (a - b));
   }
 
-  void computeDeposit(int a, int b) {
+  void computeDeposit(int a, int b, int c) {
+    // a = balance, b = balanceChange, c = debt
     setState(() {
-      if (_debt > 0) {
-        if (_balanceChange > _debt) {
-          payDebtSurplus(_balanceChange, _debt);
-          _debt = 0;
+      if (c > 0) { // Have debt?
+        if (b > c) {
+          subtract(b, c, a); // payDebtSurplus()
+          c = 0;
         } else {
-          payDebt(_debt, _balanceChange);
-          _debt = (a + b);
+          subtract(c, b, c); // payDebt()
         }
       } else {
-        _balance = (a + b);
+        add(a, a, b); // depositToBalance()
       }
     });
   }
 
   void computeWithdraw(int a, int b, int c) {
+    // a = balance, b = balanceChange, c = debt
     setState(() {
-      if (b > a) {
+      if (b > a) { // Loan?
         if (c > 0) {
-          extraLoan(c, b);
+          add(c, c, b); // extraLoan()
         } else {
-          _debt = (-1 * (a - b));
-          _balance = 0;
+          loan(a, b, c);
+          a = 0;
         }
-      } else if (b <= a) {
-        _balance = (a - b);
+      } else if (b <= a) { // Enough money?
+        subtract(a, b, a); // withdrawFromBalance()
       }
     });
   }
 
   void deposit() {
     _balanceChange = int.tryParse(_balanceChangeTEC.text) ?? 0;
-    _balanceChange < 0 ? error() : computeDeposit(_balance, _balanceChange);
+    _balanceChange < 0 ? error() : computeDeposit(_balance, _balanceChange, _debt);
   }
 
   void withdraw() {

@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_training_template/user_storage_provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class User {
-  final String username;
-  final String password;
-
-  User(this.username, this.password);
-}
-
-class CreateAccount extends StatefulWidget {
+class CreateAccount extends ConsumerStatefulWidget {
   const CreateAccount({super.key});
 
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<ConsumerStatefulWidget> createState() {
     return CreateAccountState();
   }
 }
 
-class CreateAccountState extends State<CreateAccount> {
+class CreateAccountState extends ConsumerState<CreateAccount> {
 
   String newUsername = '';
   String newPassword = '';
@@ -25,8 +20,9 @@ class CreateAccountState extends State<CreateAccount> {
   TextEditingController usernameTEC = TextEditingController();
   TextEditingController passwordTEC = TextEditingController();
   TextEditingController passwordConfirmationTEC = TextEditingController();
+  late final databaseList = ref.watch(usersNotifierProvider);
 
-  var users = <User>[];
+  get userBalance => 0;
 
   createAccount(String username, String password, String passwordConfirmation) {
     newUsername = usernameTEC.text;
@@ -34,8 +30,14 @@ class CreateAccountState extends State<CreateAccount> {
     newPasswordConfirmation = passwordConfirmationTEC.text;
 
     if (password == passwordConfirmation) {
-      final newUser = User(username, password);
-      users.add(newUser);
+      User newUser = User(
+        username,
+        password,
+        userBalance,
+        databaseList.length++
+      );
+      ref.read(usersNotifierProvider.notifier).addUser(newUser);
+      context.push('/bank');
     }
   }
 
@@ -104,30 +106,34 @@ class CreateAccountState extends State<CreateAccount> {
   }
 }
 
-class LogIn extends StatefulWidget {
+class LogIn extends ConsumerStatefulWidget {
   const LogIn({super.key});
 
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<ConsumerStatefulWidget> createState() {
     return LogInState();
   }
 }
 
-class LogInState extends State<LogIn> {
+class LogInState extends ConsumerState<LogIn> {
 
-  String _username = 'myUsername';
-  String _password = 'myPassword';
   TextEditingController _usernameTEC = TextEditingController();
   TextEditingController _passwordTEC = TextEditingController();
-  bool _usernameMatch = false;
-  bool _passwordMatch = false;
+  bool _userMatch = false;
+  int userID = 0;
+
+  void checkUserMatch(User user) {
+    final allUsers = ref.watch(usersNotifierProvider);
+    _userMatch = user == allUsers;
+  }
 
   void logIn() {
-    _username == _usernameTEC.text ? _usernameMatch = true : _usernameMatch = false;
-    _password == _passwordTEC.text ? _passwordMatch = true : _usernameMatch = false;
-    _usernameMatch == true && _passwordMatch == true ?
-    context.push('/dashboard') :
-    context.pop();
+    User enteredUser = User('$_usernameTEC', '$_passwordTEC', int as int, int as int);
+    checkUserMatch(enteredUser);
+    if ( _userMatch == true) {
+      context.push('/dashboard');
+      userID = enteredUser.userNumber;
+    }
   }
 
   @override
