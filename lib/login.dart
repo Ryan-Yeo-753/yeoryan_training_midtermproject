@@ -13,7 +13,6 @@ class CreateAccount extends ConsumerStatefulWidget {
 }
 
 class CreateAccountState extends ConsumerState<CreateAccount> {
-
   String newUsername = '';
   String newPassword = '';
   String newPasswordConfirmation = '';
@@ -34,7 +33,7 @@ class CreateAccountState extends ConsumerState<CreateAccount> {
         username,
         password,
         userBalance,
-        databaseList.length++
+        databaseList.length++,
       );
       ref.read(usersNotifierProvider.notifier).addUser(newUser);
       context.push('/bank');
@@ -49,7 +48,8 @@ class CreateAccountState extends ConsumerState<CreateAccount> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 400),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 400),
               child: TextFormField(
                 controller: usernameTEC,
                 decoration: const InputDecoration(
@@ -59,7 +59,8 @@ class CreateAccountState extends ConsumerState<CreateAccount> {
               ),
             ),
             SizedBox(height: 20),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 400),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 400),
               child: TextFormField(
                 controller: passwordTEC,
                 obscureText: true,
@@ -70,7 +71,8 @@ class CreateAccountState extends ConsumerState<CreateAccount> {
               ),
             ),
             SizedBox(height: 20),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 400),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 400),
               child: TextFormField(
                 controller: passwordConfirmationTEC,
                 obscureText: true,
@@ -81,22 +83,27 @@ class CreateAccountState extends ConsumerState<CreateAccount> {
               ),
             ),
             SizedBox(height: 20),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 400),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 400),
               child: ElevatedButton(
-                  onPressed: () {
-                    createAccount(newUsername, newPassword, newPasswordConfirmation);
-                    context.pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor: Colors.redAccent,
-                    padding: EdgeInsets.all(20),
-                    fixedSize: Size(250, 50),
-                    textStyle: TextStyle(fontWeight: FontWeight.bold),
-                    side: BorderSide(color: Colors.black, width: 2),
-                    shape: StadiumBorder(),
-                  ),
-                  child: Text('Create Account')
+                onPressed: () {
+                  createAccount(
+                    newUsername,
+                    newPassword,
+                    newPasswordConfirmation,
+                  );
+                  context.pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.redAccent,
+                  padding: EdgeInsets.all(20),
+                  fixedSize: Size(250, 50),
+                  textStyle: TextStyle(fontWeight: FontWeight.bold),
+                  side: BorderSide(color: Colors.black, width: 2),
+                  shape: StadiumBorder(),
+                ),
+                child: Text('Create Account'),
               ),
             ),
           ],
@@ -116,23 +123,20 @@ class LogIn extends ConsumerStatefulWidget {
 }
 
 class LogInState extends ConsumerState<LogIn> {
-
   TextEditingController _usernameTEC = TextEditingController();
   TextEditingController _passwordTEC = TextEditingController();
-  bool _userMatch = false;
-  int userID = 0;
-
-  void checkUserMatch(User user) {
-    final allUsers = ref.watch(usersNotifierProvider);
-    _userMatch = user == allUsers;
-  }
 
   void logIn() {
-    User enteredUser = User('$_usernameTEC', '$_passwordTEC', int as int, int as int);
-    checkUserMatch(enteredUser);
-    if ( _userMatch == true) {
-      context.push('/dashboard');
-      userID = enteredUser.userNumber;
+    final allUsers = ref.read(usersNotifierProvider);
+
+    for (User checkedUser in allUsers) {
+      if ('$_usernameTEC' == checkedUser.username &&
+          '$_passwordTEC' == checkedUser.password) {
+        ref.read(currentUserNotifierProvider.notifier).clearCurrentUser();
+        ref.read(currentUserNotifierProvider.notifier).newCurrentUser(checkedUser);
+        context.push('/dashboard');
+        break;
+      }
     }
   }
 
@@ -144,7 +148,8 @@ class LogInState extends ConsumerState<LogIn> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 400),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 400),
               child: TextFormField(
                 controller: _usernameTEC,
                 decoration: const InputDecoration(
@@ -154,7 +159,8 @@ class LogInState extends ConsumerState<LogIn> {
               ),
             ),
             SizedBox(height: 20),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 400),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 400),
               child: TextFormField(
                 controller: _passwordTEC,
                 obscureText: true,
@@ -166,7 +172,9 @@ class LogInState extends ConsumerState<LogIn> {
             ),
             SizedBox(height: 30),
             ElevatedButton(
-              onPressed: () {logIn();},
+              onPressed: () {
+                logIn();
+              },
               child: Text('Sign In'),
             ),
           ],

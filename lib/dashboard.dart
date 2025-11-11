@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_training_template/user_storage_provider.dart';
 
-class Dashboard extends StatefulWidget {
+class Dashboard extends ConsumerStatefulWidget {
   const Dashboard({super.key});
 
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<ConsumerStatefulWidget> createState() {
     return DashboardState();
   }
 }
 
-class DashboardState extends State<Dashboard> {
+class DashboardState extends ConsumerState<Dashboard> {
+  late final signedInUser = ref.read(currentUserNotifierProvider);
 
-  User signedInUser = User('', '', 0, 1);
-  int _debt = 0;
-  int _balance = int as int;
+  late int? balance = signedInUser?.userBalance;
+  late int? debt = signedInUser?.userDebt;
   int _balanceChange = 0;
   TextEditingController _balanceChangeTEC = TextEditingController();
 
@@ -39,15 +40,14 @@ class DashboardState extends State<Dashboard> {
   void computeDeposit(int a, int b, int c) {
     // a = balance, b = balanceChange, c = debt
     setState(() {
-      if (c > 0) { // Have debt?
-        if (b > c) {
-          subtract(b, c, a); // payDebtSurplus()
-          c = 0;
-        } else {
-          subtract(c, b, c); // payDebt()
-        }
-      } else {
+      if (c <= 0) { // No debt?
         add(a, a, b); // depositToBalance()
+      }
+      if (b > c) {
+        subtract(b, c, a); // payDebtSurplus()
+        c = 0;
+      } else {
+        subtract(c, b, c); // payDebt()
       }
     });
   }
@@ -70,12 +70,12 @@ class DashboardState extends State<Dashboard> {
 
   void deposit() {
     _balanceChange = int.tryParse(_balanceChangeTEC.text) ?? 0;
-    _balanceChange < 0 ? error() : computeDeposit(_balance, _balanceChange, _debt);
+    _balanceChange < 0 ? error() : computeDeposit(balance!, _balanceChange, debt!);
   }
 
   void withdraw() {
     _balanceChange = int.tryParse(_balanceChangeTEC.text) ?? 0;
-    _balanceChange < 0 ? error() : computeWithdraw(_balance, _balanceChange, _debt);
+    _balanceChange < 0 ? error() : computeWithdraw(balance!, _balanceChange, debt!);
   }
 
   @override
@@ -232,7 +232,7 @@ class DashboardState extends State<Dashboard> {
                       child: Padding(
                         padding: EdgeInsets.all(10),
                         child: Text(
-                          '\$$_debt',
+                          '\$$debt',
                           style: TextStyle(
                             fontWeight: (FontWeight.bold),
                             fontSize: 30,
@@ -278,7 +278,7 @@ class DashboardState extends State<Dashboard> {
                       child: Padding(
                         padding: EdgeInsets.all(10),
                         child: Text(
-                          '\$$_balance',
+                          '\$$balance',
                           style: TextStyle(
                             fontWeight: (FontWeight.bold),
                             fontSize: 30,

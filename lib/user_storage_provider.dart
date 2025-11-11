@@ -5,14 +5,10 @@ class User {
   final String username;
   final String password;
   final int userBalance;
-  final int userNumber;
+  final int userDebt;
 
-  User(this.username, this.password, this.userBalance, this.userNumber);
+  User(this.username, this.password, this.userBalance, this.userDebt);
 }
-
-final usersNotifierProvider = NotifierProvider<UserDatabase, List<User>>(
-  UserDatabase.new,
-);
 
 class UserDatabase extends Notifier<List<User>> {
 
@@ -25,3 +21,27 @@ class UserDatabase extends Notifier<List<User>> {
     state = [...state, user];
   }
 }
+
+final usersNotifierProvider = NotifierProvider<UserDatabase, List<User>>(
+  UserDatabase.new,
+);
+
+class CurrentUser extends Notifier<User?> {
+
+  @override
+  User? build() {
+    return null;
+  }
+
+  void newCurrentUser (User user) {
+    state = user;
+  }
+
+  void clearCurrentUser () {
+    state = null;
+  }
+}
+
+final currentUserNotifierProvider = NotifierProvider<CurrentUser, User?>(
+  CurrentUser.new,
+);
