@@ -1,11 +1,13 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import 'dashboard.dart';
 import 'login.dart';
 
 void main() {
-  runApp(const Bank());
+  runApp(ProviderScope(child: Bank()));
 }
 
 final GoRouter _router = GoRouter(
@@ -47,6 +49,7 @@ class Bank extends StatelessWidget {
     return MaterialApp.router(
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        // Add UI ThemeData()
       ),
       routerConfig: _router,
     );

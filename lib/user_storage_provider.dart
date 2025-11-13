@@ -13,35 +13,25 @@ class User {
 class UserDatabase extends Notifier<List<User>> {
 
   @override
-  List<User> build() {
-    return [];
-  }
+  List<User> build() => [];
 
-  void addUser (User user) {
-    state = [...state, user];
-  }
+  void addUser (User user) => state = [...state, user];
 }
 
 final usersNotifierProvider = NotifierProvider<UserDatabase, List<User>>(
   UserDatabase.new,
 );
 
-class CurrentUser extends Notifier<User?> {
+class CurrentUser extends Notifier<User> {
 
   @override
-  User? build() {
-    return null;
-  }
+  User build() => User('Guest', 'password', 0, 0);
 
-  void newCurrentUser (User user) {
-    state = user;
-  }
+  void newCurrentUser (User user) => state = user;
 
-  void clearCurrentUser () {
-    state = null;
-  }
+  void clearCurrentUser () => state = User('Guest', 'password', 0, 0);
 }
 
-final currentUserNotifierProvider = NotifierProvider<CurrentUser, User?>(
+final currentUserNotifierProvider = NotifierProvider<CurrentUser, User>(
   CurrentUser.new,
 );

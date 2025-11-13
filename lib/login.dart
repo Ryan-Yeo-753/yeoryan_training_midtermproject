@@ -15,26 +15,16 @@ class CreateAccount extends ConsumerStatefulWidget {
 class CreateAccountState extends ConsumerState<CreateAccount> {
   String newUsername = '';
   String newPassword = '';
-  String newPasswordConfirmation = '';
-  TextEditingController usernameTEC = TextEditingController();
-  TextEditingController passwordTEC = TextEditingController();
-  TextEditingController passwordConfirmationTEC = TextEditingController();
+  final TextEditingController _newUsernameTEC = TextEditingController();
+  final TextEditingController _newPasswordTEC = TextEditingController();
+  final TextEditingController _passwordConfirmationTEC = TextEditingController();
   late final databaseList = ref.watch(usersNotifierProvider);
 
   get userBalance => 0;
 
-  createAccount(String username, String password, String passwordConfirmation) {
-    newUsername = usernameTEC.text;
-    newPassword = passwordTEC.text;
-    newPasswordConfirmation = passwordConfirmationTEC.text;
-
-    if (password == passwordConfirmation) {
-      User newUser = User(
-        username,
-        password,
-        userBalance,
-        databaseList.length++,
-      );
+  createAccount() {
+    if (_newPasswordTEC.text == _passwordConfirmationTEC.text) {
+      User newUser = User(_newUsernameTEC.text, _newPasswordTEC.text, 0, 0,);
       ref.read(usersNotifierProvider.notifier).addUser(newUser);
       context.push('/bank');
     }
@@ -51,7 +41,7 @@ class CreateAccountState extends ConsumerState<CreateAccount> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 400),
               child: TextFormField(
-                controller: usernameTEC,
+                controller: _newUsernameTEC,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Enter a username',
@@ -62,7 +52,7 @@ class CreateAccountState extends ConsumerState<CreateAccount> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 400),
               child: TextFormField(
-                controller: passwordTEC,
+                controller: _newPasswordTEC,
                 obscureText: true,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -74,7 +64,7 @@ class CreateAccountState extends ConsumerState<CreateAccount> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 400),
               child: TextFormField(
-                controller: passwordConfirmationTEC,
+                controller: _passwordConfirmationTEC,
                 obscureText: true,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -87,11 +77,7 @@ class CreateAccountState extends ConsumerState<CreateAccount> {
               padding: const EdgeInsets.symmetric(horizontal: 400),
               child: ElevatedButton(
                 onPressed: () {
-                  createAccount(
-                    newUsername,
-                    newPassword,
-                    newPasswordConfirmation,
-                  );
+                  createAccount();
                   context.pop();
                 },
                 style: ElevatedButton.styleFrom(
@@ -130,8 +116,8 @@ class LogInState extends ConsumerState<LogIn> {
     final allUsers = ref.read(usersNotifierProvider);
 
     for (User checkedUser in allUsers) {
-      if ('$_usernameTEC' == checkedUser.username &&
-          '$_passwordTEC' == checkedUser.password) {
+      if (_usernameTEC.text == checkedUser.username &&
+          _passwordTEC.text == checkedUser.password) {
         ref.read(currentUserNotifierProvider.notifier).clearCurrentUser();
         ref.read(currentUserNotifierProvider.notifier).newCurrentUser(checkedUser);
         context.push('/dashboard');

@@ -14,68 +14,59 @@ class Dashboard extends ConsumerStatefulWidget {
 class DashboardState extends ConsumerState<Dashboard> {
   late final signedInUser = ref.read(currentUserNotifierProvider);
 
-  late int? balance = signedInUser?.userBalance;
-  late int? debt = signedInUser?.userDebt;
+  late int balance = ref.read(currentUserNotifierProvider).userBalance;
+  late int debt = ref.read(currentUserNotifierProvider).userDebt;
   int _balanceChange = 0;
   TextEditingController _balanceChangeTEC = TextEditingController();
 
   void error() {}
 
-  void add(int a, int b, int c) {
-    setState(() {
-      c = (a + b);
-    });
-  }
+  int add(int a, int b) => (a + b);
 
-  void subtract(int a, int b, int c) {
-    setState(() {
-      c = (a - b);
-    });
-  }
+  int subtract(int a, int b) => (a - b);
 
-  void loan(int a, int b, int c) {
-    c = (-1 * (a - b));
-  }
+  int loan(int a, int b) => (a - b);
 
-  void computeDeposit(int a, int b, int c) {
+  void computeDeposit() {
     // a = balance, b = balanceChange, c = debt
     setState(() {
-      if (c <= 0) { // No debt?
-        add(a, a, b); // depositToBalance()
-      }
-      if (b > c) {
-        subtract(b, c, a); // payDebtSurplus()
-        c = 0;
-      } else {
-        subtract(c, b, c); // payDebt()
-      }
-    });
-  }
-
-  void computeWithdraw(int a, int b, int c) {
-    // a = balance, b = balanceChange, c = debt
-    setState(() {
-      if (b > a) { // Loan?
-        if (c > 0) {
-          add(c, c, b); // extraLoan()
+      if (debt != 0) { // Debt?
+        if (_balanceChange >= debt) { // Enough to pay off debt?
+          balance = subtract(_balanceChange, debt); // payDebtSurplus()
+          debt = 0;
         } else {
-          loan(a, b, c);
-          a = 0;
+          debt = subtract(debt, _balanceChange); // payDebt()
         }
-      } else if (b <= a) { // Enough money?
-        subtract(a, b, a); // withdrawFromBalance()
+      } else {
+        balance = add(balance, _balanceChange); // depositToBalance()
+      }
+    });
+  }
+
+  void computeWithdraw() {
+    // a = balance, b = balanceChange, c = debt
+    setState(() {
+      if (_balanceChange > balance) { // Loan?
+        if (debt > 0) { // Have debt?
+          debt = add(debt, _balanceChange); // extraLoan()
+        } else {
+          debt = loan(_balanceChange, balance); // normalLoan()
+          balance = 0;
+        }
+      } else if (_balanceChange <= balance) { // Enough money?
+        balance = subtract(balance, _balanceChange); // withdrawFromBalance()
       }
     });
   }
 
   void deposit() {
     _balanceChange = int.tryParse(_balanceChangeTEC.text) ?? 0;
-    _balanceChange < 0 ? error() : computeDeposit(balance!, _balanceChange, debt!);
+    _balanceChange < 0 ? error() : computeDeposit();
   }
 
   void withdraw() {
     _balanceChange = int.tryParse(_balanceChangeTEC.text) ?? 0;
-    _balanceChange < 0 ? error() : computeWithdraw(balance!, _balanceChange, debt!);
+    _balanceChange < 0 ? error() : computeWithdraw();
   }
 
   @override
@@ -109,13 +100,11 @@ class DashboardState extends ConsumerState<Dashboard> {
                               filled: true,
                               fillColor: Colors.orangeAccent,
                               border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black)
+                                borderSide: BorderSide(color: Colors.black),
                               ),
                               labelText: 'Enter a deposit or withdrawal amount',
                             ),
-                            style: TextStyle(
-                                color: Colors.black
-                            ),
+                            style: TextStyle(color: Colors.black),
                           ),
                         ],
                       ),
@@ -148,9 +137,7 @@ class DashboardState extends ConsumerState<Dashboard> {
                     left: 150,
                     bottom: 100,
                     child: ElevatedButton(
-                      onPressed: () {
-                        deposit();
-                      },
+                      onPressed: () {deposit();},
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.black,
                         backgroundColor: Colors.orangeAccent,
@@ -167,9 +154,7 @@ class DashboardState extends ConsumerState<Dashboard> {
                     right: 150,
                     bottom: 100,
                     child: ElevatedButton(
-                      onPressed: () {
-                        withdraw();
-                      },
+                      onPressed: () {withdraw();},
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.black,
                         backgroundColor: Colors.orangeAccent,
