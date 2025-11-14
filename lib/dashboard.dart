@@ -181,7 +181,7 @@ class DashboardState extends ConsumerState<Dashboard> {
                           );
                         ref.read(currentUserNotifierProvider.notifier).
                           clearCurrentUser();
-                        context.push('/home');
+                        context.push('/bank');
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.black,

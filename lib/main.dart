@@ -19,6 +19,12 @@ final GoRouter _router = GoRouter(
       },
       routes: [
         GoRoute(
+          path: 'bank',
+          builder: (BuildContext context, GoRouterState state) {
+            return Bank();
+          }
+        ),
+        GoRoute(
           path: 'create_account',
           builder: (BuildContext context, GoRouterState state) {
             return CreateAccount();
