@@ -118,7 +118,6 @@ class LogInState extends ConsumerState<LogIn> {
     for (User checkedUser in allUsers) {
       if (_usernameTEC.text == checkedUser.username &&
           _passwordTEC.text == checkedUser.password) {
-        ref.read(currentUserNotifierProvider.notifier).clearCurrentUser();
         ref.read(currentUserNotifierProvider.notifier).newCurrentUser(checkedUser);
         context.push('/dashboard');
         break;

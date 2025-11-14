@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_training_template/user_storage_provider.dart';
+import 'package:go_router/go_router.dart';
 
 class Dashboard extends ConsumerStatefulWidget {
   const Dashboard({super.key});
@@ -12,8 +13,6 @@ class Dashboard extends ConsumerStatefulWidget {
 }
 
 class DashboardState extends ConsumerState<Dashboard> {
-  late final signedInUser = ref.read(currentUserNotifierProvider);
-
   late int balance = ref.read(currentUserNotifierProvider).userBalance;
   late int debt = ref.read(currentUserNotifierProvider).userDebt;
   int _balanceChange = 0;
@@ -37,7 +36,7 @@ class DashboardState extends ConsumerState<Dashboard> {
         } else {
           debt = subtract(debt, _balanceChange); // payDebt()
         }
-      } else {
+      } else {  // No debt
         balance = add(balance, _balanceChange); // depositToBalance()
       }
     });
@@ -72,7 +71,6 @@ class DashboardState extends ConsumerState<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: Center(
         child: Row(
           children: [
@@ -165,6 +163,36 @@ class DashboardState extends ConsumerState<Dashboard> {
                         shape: StadiumBorder(),
                       ),
                       child: Text('Withdraw'),
+                    ),
+                  ),
+                  Positioned(
+                    right: 25,
+                    bottom: 25,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        ref.read(currentUserNotifierProvider.notifier).
+                          updateCurrentUser(
+                            User(
+                              ref.read(currentUserNotifierProvider).username,
+                              ref.read(currentUserNotifierProvider).password,
+                              balance,
+                              debt
+                            )
+                          );
+                        ref.read(currentUserNotifierProvider.notifier).
+                          clearCurrentUser();
+                        context.push('/home');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.black,
+                        backgroundColor: Colors.orangeAccent,
+                        padding: EdgeInsets.all(10),
+                        fixedSize: Size(100, 40),
+                        textStyle: TextStyle(fontWeight: FontWeight.bold),
+                        side: BorderSide(color: Colors.black, width: 2),
+                        shape: StadiumBorder(),
+                      ),
+                      child: Text('Sign Out'),
                     ),
                   ),
                 ],

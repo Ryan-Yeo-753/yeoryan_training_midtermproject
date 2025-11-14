@@ -16,6 +16,10 @@ class UserDatabase extends Notifier<List<User>> {
   List<User> build() => [];
 
   void addUser (User user) => state = [...state, user];
+
+  void removeUser(User user) => state = state.where(
+    (u) => u.username != user.username
+  ).toList();
 }
 
 final usersNotifierProvider = NotifierProvider<UserDatabase, List<User>>(
@@ -29,7 +33,12 @@ class CurrentUser extends Notifier<User> {
 
   void newCurrentUser (User user) => state = user;
 
-  void clearCurrentUser () => state = User('Guest', 'password', 0, 0);
+  void clearCurrentUser() => state = User('Guest', 'password', 0, 0);
+
+  void updateCurrentUser(User currentUser) {
+    ref.read(usersNotifierProvider.notifier).removeUser(currentUser);
+    ref.read(usersNotifierProvider.notifier).addUser(currentUser);
+  }
 }
 
 final currentUserNotifierProvider = NotifierProvider<CurrentUser, User>(
