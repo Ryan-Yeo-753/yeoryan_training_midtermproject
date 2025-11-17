@@ -24,7 +24,7 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: 'bank',
           builder: (BuildContext context, GoRouterState state) {
-            return Bank();
+            return Home();
           }
         ),
         GoRoute(
