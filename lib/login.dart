@@ -38,39 +38,22 @@ class CreateAccountState extends ConsumerState<CreateAccount> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 400),
-              child: TextFormField(
-                controller: _newUsernameTEC,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Enter a username',
-                ),
-              ),
+            AccountDataCollector(
+              controller: _newUsernameTEC,
+              label: 'Enter a username',
+              textObscured: false
             ),
             SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 400),
-              child: TextFormField(
-                controller: _newPasswordTEC,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Enter a password',
-                ),
-              ),
+            AccountDataCollector(
+              controller: _newPasswordTEC,
+              label: 'Enter a password',
+              textObscured: true
             ),
             SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 400),
-              child: TextFormField(
-                controller: _passwordConfirmationTEC,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Confirm your password',
-                ),
-              ),
+            AccountDataCollector(
+              controller: _passwordConfirmationTEC,
+              label: 'Confirm your password',
+              textObscured: true
             ),
             SizedBox(height: 20),
             Padding(
@@ -133,27 +116,16 @@ class LogInState extends ConsumerState<LogIn> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 400),
-              child: TextFormField(
-                controller: _usernameTEC,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Enter your username',
-                ),
-              ),
+            AccountDataCollector(
+              controller: _usernameTEC,
+              label: 'Enter your username',
+              textObscured: false
             ),
             SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 400),
-              child: TextFormField(
-                controller: _passwordTEC,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Enter your password',
-                ),
-              ),
+            AccountDataCollector(
+              controller: _passwordTEC,
+              label: 'Enter your password',
+              textObscured: true
             ),
             SizedBox(height: 30),
             ElevatedButton(
@@ -163,6 +135,34 @@ class LogInState extends ConsumerState<LogIn> {
               child: Text('Sign In'),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class AccountDataCollector extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final bool textObscured;
+
+  const AccountDataCollector({
+    super.key,
+    required this.controller,
+    required this.label,
+    required this.textObscured
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 400),
+      child: TextFormField(
+        controller: controller,
+        obscureText: textObscured,
+        decoration: InputDecoration(
+          border: const OutlineInputBorder(),
+          labelText: label,
         ),
       ),
     );

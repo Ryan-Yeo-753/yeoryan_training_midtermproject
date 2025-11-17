@@ -22,10 +22,10 @@ final GoRouter _router = GoRouter(
       },
       routes: [
         GoRoute(
-          path: 'bank',
-          builder: (BuildContext context, GoRouterState state) {
-            return Home();
-          }
+            path: 'bank',
+            builder: (BuildContext context, GoRouterState state) {
+              return Home();
+            }
         ),
         GoRoute(
           path: 'create_account',
@@ -56,16 +56,17 @@ class Bank extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AdaptiveTheme(
-      light: ThemeData.light(useMaterial3: true),
-      dark: ThemeData.dark(useMaterial3: true),
-      initial: AdaptiveThemeMode.light,
-      builder: (theme, darkTheme) => MaterialApp.router(
-        darkTheme: darkTheme,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Color(0xfff0dada)),
-        ),
-        routerConfig: _router,
-      )
+        light: ThemeData.light(useMaterial3: true),
+        dark: ThemeData.dark(useMaterial3: true),
+        initial: AdaptiveThemeMode.light,
+        builder: (theme, darkTheme) =>
+            MaterialApp.router(
+              darkTheme: darkTheme,
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(seedColor: Color(0xfff0dada)),
+              ),
+              routerConfig: _router,
+            )
     );
   }
 }
@@ -129,36 +130,48 @@ class _HomeState extends State<Home> {
               ),
             ),
             SizedBox(height: 50),
-            ElevatedButton(
+            HomePageButton(
+              label: 'Log In',
               onPressed: () => context.push('/login'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.black,
-                backgroundColor: Colors.redAccent,
-                padding: EdgeInsets.all(20),
-                fixedSize: Size(250, 50),
-                textStyle: TextStyle(fontWeight: FontWeight.bold),
-                side: BorderSide(color: Colors.black, width: 2),
-                shape: StadiumBorder(),
-              ),
-              child: Text('Log In'),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
+            HomePageButton(
+              label: 'Create an Account',
               onPressed: () => context.push('/create_account'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.black,
-                backgroundColor: Colors.redAccent,
-                padding: EdgeInsets.all(20),
-                fixedSize: Size(250, 50),
-                textStyle: TextStyle(fontWeight: FontWeight.bold),
-                side: BorderSide(color: Colors.black, width: 2),
-                shape: StadiumBorder(),
-              ),
-              child: Text('Create an Account'),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class HomePageButton extends StatelessWidget {
+  final String label;
+  final VoidCallback onPressed;
+  final Color buttonColor;
+
+  const HomePageButton({
+    super.key,
+    required this.label,
+    required this.onPressed,
+    this.buttonColor = Colors.blue
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.black,
+        backgroundColor: Colors.redAccent,
+        padding: EdgeInsets.all(20),
+        fixedSize: Size(250, 50),
+        textStyle: TextStyle(fontWeight: FontWeight.bold),
+        side: BorderSide(color: Colors.black, width: 2),
+        shape: StadiumBorder(),
+      ),
+      child: Text(label),
     );
   }
 }

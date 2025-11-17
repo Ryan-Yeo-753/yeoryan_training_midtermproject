@@ -95,13 +95,9 @@ class DashboardState extends ConsumerState<Dashboard> {
         child: Row(
           children: [
             SizedBox(width: 50),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.red,
-                border: Border.all(color: Colors.black, width: 4),
-              ),
-              width: 650,
+            BackingContainer(
               height: 600,
+              width: 650,
               child: Stack(
                 children: [
                   Positioned(
@@ -131,202 +127,213 @@ class DashboardState extends ConsumerState<Dashboard> {
                   Positioned(
                     top: 75,
                     left: 70,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        border: Border.all(color: Colors.black, width: 4),
-                      ),
-                      width: 500,
-                      height: 100,
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Text(
-                          'Deposit / Withdraw',
-                          style: TextStyle(
-                            fontWeight: (FontWeight.bold),
-                            fontSize: 40,
-                          ),
-                        ),
-                      ),
-                    ),
+                    child: ContainerLabel(label: 'Deposit/Withdraw', width: 500),
                   ),
                   Positioned(
                     left: 150,
                     bottom: 100,
-                    child: ElevatedButton(
-                      onPressed: () {deposit();},
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor: Colors.redAccent,
-                        padding: EdgeInsets.all(20),
-                        fixedSize: Size(150, 50),
-                        textStyle: TextStyle(fontWeight: FontWeight.bold),
-                        side: BorderSide(color: Colors.black, width: 2),
-                        shape: StadiumBorder(),
-                      ),
-                      child: Text('Deposit'),
-                    ),
+                    child: DashboardButton(
+                      label: 'Deposit',
+                      height: 50,
+                      width: 150,
+                      onPressed: deposit,
+                    )
                   ),
                   Positioned(
                     right: 150,
                     bottom: 100,
-                    child: ElevatedButton(
-                      onPressed: () {withdraw();},
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor: Colors.redAccent,
-                        padding: EdgeInsets.all(20),
-                        fixedSize: Size(150, 50),
-                        textStyle: TextStyle(fontWeight: FontWeight.bold),
-                        side: BorderSide(color: Colors.black, width: 2),
-                        shape: StadiumBorder(),
-                      ),
-                      child: Text('Withdraw'),
-                    ),
+                    child: DashboardButton(
+                      label: 'Withdraw',
+                      height: 50,
+                      width: 150,
+                      onPressed: withdraw,
+                    )
                   ),
                   Positioned(
                     right: 25,
                     bottom: 25,
-                    child: ElevatedButton(
+                    child: DashboardButton(
+                      label: 'Sign Out',
+                      height: 40,
+                      width: 100,
                       onPressed: () {
-                        ref.read(currentUserNotifierProvider.notifier).
-                          updateCurrentUser(
-                            User(
-                              ref.read(currentUserNotifierProvider).username,
-                              ref.read(currentUserNotifierProvider).password,
-                              balance,
-                              debt
-                            )
-                          );
-                        ref.read(currentUserNotifierProvider.notifier).
-                          clearCurrentUser();
+                        ref.read(
+                          currentUserNotifierProvider.notifier
+                        ).updateCurrentUser(
+                          User(
+                            ref.read(currentUserNotifierProvider).username,
+                            ref.read(currentUserNotifierProvider).password,
+                            balance,
+                            debt
+                          )
+                        );
+                        ref.read(
+                          currentUserNotifierProvider.notifier
+                        ).clearCurrentUser();
                         context.push('/bank');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor: Colors.orangeAccent,
-                        padding: EdgeInsets.all(10),
-                        fixedSize: Size(100, 40),
-                        textStyle: TextStyle(fontWeight: FontWeight.bold),
-                        side: BorderSide(color: Colors.black, width: 2),
-                        shape: StadiumBorder(),
-                      ),
-                      child: Text('Sign Out'),
-                    ),
+                      }
+                    )
                   ),
                 ],
-              ),
+              )
             ),
             Spacer(),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.red,
-                border: Border.all(color: Colors.black, width: 4),
-              ),
-              width: 450,
+            BackingContainer(
               height: 600,
+              width: 450,
               child: Stack(
                 children: [
                   Positioned(
                     top: 75,
                     left: 70,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        border: Border.all(color: Colors.black, width: 4),
-                      ),
-                      width: 300,
-                      height: 100,
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Text(
-                          'Debt',
-                          style: TextStyle(
-                            fontWeight: (FontWeight.bold),
-                            fontSize: 40,
-                          ),
-                        ),
-                      ),
-                    ),
+                    child: ContainerLabel(label: 'Debt', width: 300),
                   ),
                   Positioned(
-                    top: 200,
-                    left: 70,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.redAccent,
-                        border: Border.all(color: Colors.black, width: 4),
-                      ),
-                      width: 300,
-                      height: 75,
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          '\$$debt',
-                          style: TextStyle(
-                            fontWeight: (FontWeight.bold),
-                            fontSize: 30,
-                          ),
-                        ),
-                      ),
-                    ),
+                      top: 200,
+                      left: 70,
+                      child: UserInformationContainer(value: debt)
                   ),
                   Positioned(
                     bottom: 175,
                     left: 70,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        border: Border.all(color: Colors.black, width: 4),
-                      ),
-                      width: 300,
-                      height: 100,
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Text(
-                          'Balance',
-                          style: TextStyle(
-                            fontWeight: (FontWeight.bold),
-                            fontSize: 40,
-                          ),
-                        ),
-                      ),
-                    ),
+                    child: ContainerLabel(label: 'Balance', width: 300),
                   ),
                   Positioned(
-                    bottom: 75,
-                    left: 70,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.redAccent,
-                        border: Border.all(color: Colors.black, width: 4),
-                      ),
-                      width: 300,
-                      height: 75,
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          '\$$balance',
-                          style: TextStyle(
-                            fontWeight: (FontWeight.bold),
-                            fontSize: 30,
-                          ),
-                        ),
-                      ),
-                    ),
+                      bottom: 75,
+                      left: 70,
+                      child: UserInformationContainer(value: balance)
                   ),
                 ],
-              ),
+              )
             ),
             SizedBox(width: 50),
           ],
         ),
       ),
+    );
+  }
+}
+
+class BackingContainer extends StatelessWidget {
+  final double height;
+  final double width;
+  final Widget child;
+
+  const BackingContainer({
+    super.key,
+    required this.height,
+    required this.width,
+    required this.child
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.red,
+        border: Border.all(color: Colors.black, width: 4),
+      ),
+      height: height,
+      width: width,
+      child: child
+    );
+  }
+}
+
+class ContainerLabel extends StatelessWidget {
+  final String label;
+  final double width;
+
+  const ContainerLabel({
+    super.key,
+    required this.label,
+    required this.width
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container (
+      decoration: BoxDecoration(
+        color: Colors.orange,
+        border: Border.all(color: Colors.black, width: 4),
+      ),
+      width: width,
+      height: 100,
+      alignment: Alignment.center,
+      child: Padding(
+        padding: EdgeInsets.all(15),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontWeight: (FontWeight.bold),
+            fontSize: 40,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class UserInformationContainer extends StatelessWidget {
+  final double value;
+
+  const UserInformationContainer({
+    super.key,
+    required this.value
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.redAccent,
+        border: Border.all(color: Colors.black, width: 4),
+      ),
+      width: 300,
+      height: 75,
+      alignment: Alignment.center,
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Text(
+          '\$$value',
+          style: TextStyle(
+            fontWeight: (FontWeight.bold),
+            fontSize: 30,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DashboardButton extends StatelessWidget {
+  final String label;
+  final double height;
+  final double width;
+  final VoidCallback onPressed;
+
+  const DashboardButton({
+    super.key,
+    required this.label,
+    required this.height,
+    required this.width,
+    required this.onPressed
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.black,
+        backgroundColor: Colors.redAccent,
+        padding: EdgeInsets.all(10),
+        fixedSize: Size(width, height),
+        textStyle: TextStyle(fontWeight: FontWeight.bold),
+        side: BorderSide(color: Colors.black, width: 2),
+        shape: StadiumBorder(),
+      ),
+      child: Text(label),
     );
   }
 }
