@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_training_template/user_storage_provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class Dashboard extends ConsumerStatefulWidget {
   const Dashboard({super.key});
@@ -71,13 +73,31 @@ class DashboardState extends ConsumerState<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: <Widget>[
+          ToggleSwitch(
+            totalSwitches: 2,
+            activeBgColors: [[Colors.white], [Colors.black]],
+            activeFgColor: Colors.pinkAccent,
+            inactiveBgColor: Colors.grey,
+            inactiveFgColor: Colors.blueGrey,
+            labels: const ['Light', 'Dark'],
+            initialLabelIndex: 0,
+            onToggle: (index) {
+              index == 0 ?
+              AdaptiveTheme.of(context).setLight() :
+              AdaptiveTheme.of(context).setDark();
+            },
+          )
+        ],
+      ),
       body: Center(
         child: Row(
           children: [
             SizedBox(width: 50),
             Container(
               decoration: BoxDecoration(
-                color: Colors.redAccent,
+                color: Colors.red,
                 border: Border.all(color: Colors.black, width: 4),
               ),
               width: 650,
@@ -138,7 +158,7 @@ class DashboardState extends ConsumerState<Dashboard> {
                       onPressed: () {deposit();},
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.black,
-                        backgroundColor: Colors.orangeAccent,
+                        backgroundColor: Colors.redAccent,
                         padding: EdgeInsets.all(20),
                         fixedSize: Size(150, 50),
                         textStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -155,7 +175,7 @@ class DashboardState extends ConsumerState<Dashboard> {
                       onPressed: () {withdraw();},
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.black,
-                        backgroundColor: Colors.orangeAccent,
+                        backgroundColor: Colors.redAccent,
                         padding: EdgeInsets.all(20),
                         fixedSize: Size(150, 50),
                         textStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -201,7 +221,7 @@ class DashboardState extends ConsumerState<Dashboard> {
             Spacer(),
             Container(
               decoration: BoxDecoration(
-                color: Colors.redAccent,
+                color: Colors.red,
                 border: Border.all(color: Colors.black, width: 4),
               ),
               width: 450,
@@ -236,7 +256,7 @@ class DashboardState extends ConsumerState<Dashboard> {
                     left: 70,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.orangeAccent,
+                        color: Colors.redAccent,
                         border: Border.all(color: Colors.black, width: 4),
                       ),
                       width: 300,
@@ -282,7 +302,7 @@ class DashboardState extends ConsumerState<Dashboard> {
                     left: 70,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.orangeAccent,
+                        color: Colors.redAccent,
                         border: Border.all(color: Colors.black, width: 4),
                       ),
                       width: 300,

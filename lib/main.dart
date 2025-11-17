@@ -1,7 +1,10 @@
 import 'dart:core';
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 import 'dashboard.dart';
 import 'login.dart';
@@ -52,12 +55,17 @@ class Bank extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        // Add UI ThemeData()
-      ),
-      routerConfig: _router,
+    return AdaptiveTheme(
+      light: ThemeData.light(useMaterial3: true),
+      dark: ThemeData.dark(useMaterial3: true),
+      initial: AdaptiveThemeMode.light,
+      builder: (theme, darkTheme) => MaterialApp.router(
+        darkTheme: darkTheme,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Color(0xfff0dada)),
+        ),
+        routerConfig: _router,
+      )
     );
   }
 }
@@ -71,16 +79,35 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: <Widget>[
+          ToggleSwitch(
+            totalSwitches: 2,
+            activeBgColors: [[Colors.white], [Colors.black]],
+            activeFgColor: Colors.pinkAccent,
+            inactiveBgColor: Colors.grey,
+            inactiveFgColor: Colors.blueGrey,
+            labels: const ['Light', 'Dark'],
+            initialLabelIndex: 0,
+            onToggle: (index) {
+              index == 0 ?
+              AdaptiveTheme.of(context).setLight() :
+              AdaptiveTheme.of(context).setDark();
+            },
+          )
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Colors.redAccent,
+                color: Colors.red,
                 border: Border.all(color: Colors.black, width: 4),
               ),
               width: 450,
@@ -106,7 +133,7 @@ class _HomeState extends State<Home> {
               onPressed: () => context.push('/login'),
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
-                backgroundColor: Colors.orangeAccent,
+                backgroundColor: Colors.redAccent,
                 padding: EdgeInsets.all(20),
                 fixedSize: Size(250, 50),
                 textStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -120,7 +147,7 @@ class _HomeState extends State<Home> {
               onPressed: () => context.push('/create_account'),
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
-                backgroundColor: Colors.orangeAccent,
+                backgroundColor: Colors.redAccent,
                 padding: EdgeInsets.all(20),
                 fixedSize: Size(250, 50),
                 textStyle: TextStyle(fontWeight: FontWeight.bold),
