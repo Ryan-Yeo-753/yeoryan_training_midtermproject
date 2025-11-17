@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class User {
   final String username;
   final String password;
-  final double userBalance;
-  final double userDebt;
+  final int userBalance;
+  final int userDebt;
 
   User(this.username, this.password, this.userBalance, this.userDebt);
 }

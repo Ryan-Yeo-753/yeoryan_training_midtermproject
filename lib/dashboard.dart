@@ -15,18 +15,18 @@ class Dashboard extends ConsumerStatefulWidget {
 }
 
 class DashboardState extends ConsumerState<Dashboard> {
-  late double balance = ref.read(currentUserNotifierProvider).userBalance;
-  late double debt = ref.read(currentUserNotifierProvider).userDebt;
-  double _balanceChange = 0;
+  late int balance = ref.read(currentUserNotifierProvider).userBalance;
+  late int debt = ref.read(currentUserNotifierProvider).userDebt;
+  int _balanceChange = 0;
   TextEditingController _balanceChangeTEC = TextEditingController();
 
   void error() {}
 
-  double add(double a, double b) => (a + b);
+  int add(int a, int b) => (a + b);
 
-  double subtract(double a, double b) => (a - b);
+  int subtract(int a, int b) => (a - b);
 
-  double loan(double a, double b) => (a - b);
+  int loan(int a, int b) => (a - b);
 
   void computeDeposit() {
     // a = balance, b = balanceChange, c = debt
@@ -61,12 +61,12 @@ class DashboardState extends ConsumerState<Dashboard> {
   }
 
   void deposit() {
-    _balanceChange = double.tryParse(_balanceChangeTEC.text) ?? 0;
+    _balanceChange = int.tryParse(_balanceChangeTEC.text) ?? 0;
     _balanceChange < 0 ? error() : computeDeposit();
   }
 
   void withdraw() {
-    _balanceChange = double.tryParse(_balanceChangeTEC.text) ?? 0;
+    _balanceChange = int.tryParse(_balanceChangeTEC.text) ?? 0;
     _balanceChange < 0 ? error() : computeWithdraw();
   }
 
@@ -275,7 +275,7 @@ class ContainerLabel extends StatelessWidget {
 }
 
 class UserInformationContainer extends StatelessWidget {
-  final double value;
+  final int value;
 
   const UserInformationContainer({
     super.key,
